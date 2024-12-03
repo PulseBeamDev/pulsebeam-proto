@@ -1,5 +1,5 @@
 syntax = "proto3";
-package service.rpc.v1;
+package pulsebeam.v1;
 option optimize_for = CODE_SIZE;
 
 service Tunnel {
