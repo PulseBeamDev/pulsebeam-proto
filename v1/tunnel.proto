@@ -29,7 +29,7 @@ message SendResp {
 }
 
 message RecvReq {
-  PeerInfo info = 1;
+  PeerInfo src = 1;
 }
 
 message RecvResp {
@@ -37,8 +37,12 @@ message RecvResp {
 }
 
 message PeerInfo {
-  uint32 conn_id = 1;
-  bool enable_discovery = 2;
+  string group_id = 1;
+  // where this message is originated from. Special values: "SYSTEM"
+  string peer_id = 2;
+  // used for deciding polite vs impolite. higher id wins. It also is used to detect connection breakages
+  // WARNING, reserved values: 0-16
+  uint32 conn_id = 3; 
 }
 
 // Use small tag numbers (1-15) for fields that are frequently used or are performance-sensitive, even if they are optional.
@@ -62,13 +66,8 @@ message MessagePayload {
 }
 
 message MessageHeader {
-  string group_id = 1;
-  string peer_id = 2; // where this message is originated from. Special values: "SYSTEM"
-  uint32 conn_id = 3; // used for deciding polite vs impolite. higher id wins. It also is used to detect connection breakages
-
-  string other_group_id = 4;
-  string other_peer_id = 5; // Special values: "SYSTEM"
-  uint32 other_conn_id = 6; // Special values: 0-16
+  PeerInfo src = 1;
+  PeerInfo dst = 2;
 
   uint32 seqnum = 7;
   bool reliable = 8; // true: tcp like, false: fire & forget
