@@ -2,10 +2,10 @@ syntax = "proto3";
 package pulsebeam.v1;
 option optimize_for = CODE_SIZE;
 
-service Tunnel {
+service Signaling {
   rpc Prepare(PrepareReq) returns (PrepareResp);
   rpc Send(SendReq) returns (SendResp);
-  rpc Recv(RecvReq) returns (RecvResp);
+  rpc Recv(RecvReq) returns (stream RecvResp);
 }
 
 message PrepareReq {
@@ -33,7 +33,7 @@ message RecvReq {
 }
 
 message RecvResp {
-  repeated Message msgs = 1;
+  Message msg = 1;
 }
 
 message PeerInfo {
