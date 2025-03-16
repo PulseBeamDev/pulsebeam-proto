@@ -62,6 +62,7 @@ message MessagePayload {
     Join join = 2;
     Bye bye = 3;
     Ack ack = 4;
+    Ping ping = 5;
   }
 }
 
@@ -112,6 +113,8 @@ message Bye {
 message Ack {
   repeated AckRange ack_ranges = 1;
 }
+
+message Ping {}
 
 message AckRange {
   uint32 seqnum_start = 1;
