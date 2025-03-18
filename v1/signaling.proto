@@ -80,6 +80,7 @@ message Signal {
   oneof data {
     Sdp sdp = 9;
     ICECandidate ice_candidate = 10;
+    ICECandidateBatch ice_candidate_batch = 11;
   }
 }
 
@@ -94,6 +95,10 @@ enum SdpKind {
 message Sdp {
   SdpKind kind = 1;
   string sdp = 2;
+}
+
+message ICECandidateBatch {
+  repeated ICECandidate candidates = 1;
 }
 
 message ICECandidate {
