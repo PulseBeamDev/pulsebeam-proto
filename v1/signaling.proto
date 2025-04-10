@@ -1,4 +1,7 @@
 syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
 package pulsebeam.v1;
 option optimize_for = CODE_SIZE;
 
@@ -6,6 +9,7 @@ service Signaling {
   rpc Prepare(PrepareReq) returns (PrepareResp);
   rpc Send(SendReq) returns (SendResp);
   rpc Recv(RecvReq) returns (stream RecvResp);
+  rpc AnalyticsReport(AnalyticsReportReq) returns (AnalyticsReportResp);
 }
 
 message PrepareReq {
@@ -135,4 +139,33 @@ message DataChannel {
 }
 
 message DataChannelHeartbeat {
+}
+
+message AnalyticsReportReq {
+  repeated AnalyticsEvent events = 1;
+}
+
+message AnalyticsEvent {
+  google.protobuf.Timestamp timestamp = 1;
+  AnalyticsTags tags = 2;
+  AnalyticsMetric metrics = 3;
+}
+
+message AnalyticsTags {
+  PeerInfo src = 1;
+  PeerInfo dst = 2;
+}
+
+// "scaled" = trunc(X * 10^3)
+message AnalyticsMetric {
+  // The overall derived quality score:
+  // - 80-100: excellent
+  // - 60-79: good
+  // - 40-59: fair
+  // - 20-39: poor
+  // - 0-19: bad
+  sint64 quality_score = 1;
+}
+
+message AnalyticsReportResp {
 }
