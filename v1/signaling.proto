@@ -148,7 +148,7 @@ message AnalyticsReportReq {
 message AnalyticsEvent {
   google.protobuf.Timestamp timestamp = 1;
   AnalyticsTags tags = 2;
-  AnalyticsMetric metrics = 3;
+  AnalyticsMetrics metrics = 3;
 }
 
 message AnalyticsTags {
@@ -157,7 +157,7 @@ message AnalyticsTags {
 }
 
 // "scaled" = trunc(X * 10^3)
-message AnalyticsMetric {
+message AnalyticsMetrics {
   // The overall derived quality score:
   // - 80-100: excellent
   // - 60-79: good
