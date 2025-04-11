@@ -162,7 +162,8 @@ message AnalyticsMetrics {
   // - 40-59: fair
   // - 20-39: poor
   // - 0-19: bad
-  sint64 quality_score = 1;
+  optional sint64 quality_score = 1;
+  optional sint64 rtt_us = 2;
 }
 
 message AnalyticsReportResp {
