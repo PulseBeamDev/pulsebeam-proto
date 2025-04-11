@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 package pulsebeam.v1;
 option optimize_for = CODE_SIZE;
 
@@ -146,7 +144,7 @@ message AnalyticsReportReq {
 }
 
 message AnalyticsEvent {
-  google.protobuf.Timestamp timestamp = 1;
+  sint64 timestamp_us = 1;
   AnalyticsTags tags = 2;
   AnalyticsMetrics metrics = 3;
 }
