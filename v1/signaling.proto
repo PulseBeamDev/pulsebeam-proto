@@ -144,8 +144,9 @@ message AnalyticsReportReq {
 }
 
 message AnalyticsEvent {
-  AnalyticsTags tags = 1;
-  repeated AnalyticsMetrics metrics = 2;
+  sint64 timestamp_us = 1;
+  AnalyticsTags tags = 2;
+  AnalyticsMetrics metrics = 3; 
 }
 
 message AnalyticsTags {
@@ -155,7 +156,6 @@ message AnalyticsTags {
 
 // "scaled" = trunc(X * 10^3)
 message AnalyticsMetrics {
-  sint64 timestamp_us = 1;
   optional EventType event_type = 2;
   // The overall derived quality score:
   // - 80-100: excellent
