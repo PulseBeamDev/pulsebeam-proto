@@ -178,17 +178,6 @@ message AnalyticsMetrics {
 message AnalyticsReportResp {
 }
 
-message AnalyticsEvent {
-  oneof kind {
-    ErrorEvent error_event = 2;
-    IceCandidateEvent ice_candidate_event = 3;
-    SignalingEvent signaling_event = 4;
-    UserInteractionEvent user_interaction_event = 5;
-    MediaHandlingEvent media_handling_event = 6;
-    IceConnectionType ice_connection_type = 7;
-  }
-}
-
 enum ErrorEvent {
   ERROR_EVENT_UNSPECIFIED = 0;
   ERROR_SIGNALING_CONNECTION_FAILED = 1;
