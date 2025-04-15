@@ -157,15 +157,22 @@ message AnalyticsTags {
 message AnalyticsMetrics {
   sint64 timestamp_us = 1;
 
-  optional AnalyticsEvent event = 2;
+  // events
+  optional ErrorEvent error_event = 2;
+  optional IceCandidateEvent ice_candidate_event = 3;
+  optional SignalingEvent signaling_event = 4;
+  optional UserInteractionEvent user_interaction_event = 5;
+  optional MediaHandlingEvent media_handling_event = 6;
+  optional IceConnectionType ice_connection_type = 7;
+
   // The overall derived quality score:
   // - 80-100: excellent
   // - 60-79: good
   // - 40-59: fair
   // - 20-39: poor
   // - 0-19: bad
-  optional sint64 quality_score = 3;
-  optional sint64 rtt_us = 4;
+  optional sint64 quality_score = 17;
+  optional sint64 rtt_us = 18;
 }
 
 message AnalyticsReportResp {
@@ -196,12 +203,12 @@ enum ErrorEvent {
 enum IceCandidateEvent {
   ICE_CANDIDATE_EVENT_UNSPECIFIED = 0;
   ICE_CANDIDATE_GATHERING_STARTED = 1;
-  ICE_CANDIDATE_LOCAL_REFLEXIVE_FOUND = 2;
+  ICE_CANDIDATE_LOCAL_RELAY_FOUND = 2;
   ICE_CANDIDATE_LOCAL_HOST_FOUND = 3;
   ICE_CANDIDATE_LOCAL_SRFLX_FOUND = 4;
   ICE_CANDIDATE_LOCAL_PRFLX_FOUND = 5;
   ICE_CANDIDATE_REMOTE_RECEIVED = 6;
-  ICE_CANDIDATE_REMOTE_REFLEXIVE_FOUND = 7;
+  ICE_CANDIDATE_REMOTE_RELAY_FOUND = 7;
   ICE_CANDIDATE_REMOTE_HOST_FOUND = 8;
   ICE_CANDIDATE_REMOTE_SRFLX_FOUND = 9;
   ICE_CANDIDATE_REMOTE_PRFLX_FOUND = 10;
