@@ -140,10 +140,10 @@ message DataChannelHeartbeat {
 }
 
 message AnalyticsReportReq {
-  repeated AnalyticsEvent events = 1;
+  repeated AnalyticsReport reports = 1;
 }
 
-message AnalyticsEvent {
+message AnalyticsReport {
   AnalyticsTags tags = 1;
   repeated AnalyticsMetrics metrics = 2; 
 }
@@ -157,7 +157,7 @@ message AnalyticsTags {
 message AnalyticsMetrics {
   sint64 timestamp_us = 1;
 
-  optional EventType event_type = 2;
+  optional AnalyticsEvent event = 2;
   // The overall derived quality score:
   // - 80-100: excellent
   // - 60-79: good
@@ -171,82 +171,116 @@ message AnalyticsMetrics {
 message AnalyticsReportResp {
 }
 
-enum EventType {
-  UNKNOWN_EVENT = 0; // Default value, should always be the first
-
-  // --- Error Reporting Events (Range: 1000 - 1099) ---
-  EVENT_ERROR_REPORTING_BASE = 1000; // Base for error reporting events
-  EVENT_ERROR_SIGNALING_CONNECTION_FAILED = 1001; // An error occurred with the signaling connection
-  EVENT_ERROR_ICE_CONNECTION_FAILED = 1002; // An error occurred with the ICE connection
-  EVENT_ERROR_MEDIA_CAPTURE_AUDIO_FAILED = 1003; // An error occurred while capturing audio
-  EVENT_ERROR_MEDIA_CAPTURE_VIDEO_FAILED = 1004; // An error occurred while capturing video
-  EVENT_ERROR_MEDIA_CAPTURE_SCREEN_FAILED = 1005; // An error occurred while capturing screen
-  EVENT_ERROR_SDP_NEGOTIATION_FAILED = 1006; // An error occurred during SDP negotiation
-  EVENT_ERROR_OTHER = 1099; // A general or uncategorized error
-
-  // --- ICE Candidate Events (Range: 2000 - 2099) ---
-  EVENT_ICE_CANDIDATE_BASE = 2000; // Base for ICE candidate related events
-  EVENT_ICE_CANDIDATE_GATHERING_STARTED = 2001; // ICE gathering process initiated
-  EVENT_ICE_CANDIDATE_LOCAL_REFLEXIVE_FOUND = 2002; // A reflexive ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_LOCAL_HOST_FOUND = 2003; // A host ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_LOCAL_SRFLX_FOUND = 2004; // A server-reflexive (STUN) ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_LOCAL_PRFLX_FOUND = 2005; // A peer-reflexive ICE candidate was discovered (less common)
-  EVENT_ICE_CANDIDATE_REMOTE_RECEIVED = 2006; // An ICE candidate from the remote peer was received
-  EVENT_ICE_CANDIDATE_REMOTE_REFLEXIVE_FOUND = 2007; // A reflexive ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_REMOTE_HOST_FOUND = 2008; // A host ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_REMOTE_SRFLX_FOUND = 2009; // A server-reflexive (STUN) ICE candidate was discovered
-  EVENT_ICE_CANDIDATE_REMOTE_PRFLX_FOUND = 2010; // A peer-reflexive ICE candidate was discovered (less common)
-  EVENT_ICE_CANDIDATE_PAIRING_SUCCESS = 2011; // ICE candidate pair succeeded in establishing a connection
-  EVENT_ICE_CANDIDATE_PAIRING_FAILED = 2012; // ICE candidate pair failed to establish a connection
-  EVENT_ICE_CANDIDATE_CONNECTION_STATE_CHANGED = 2013; // The ICE connection state has changed (e.g., connecting, connected, failed)
-  EVENT_ICE_CANDIDATE_GATHERING_COMPLETED = 2014; // ICE gathering process finished
-  EVENT_ICE_CANDIDATE_SELECTED_PAIR = 2015; // The best ICE candidate pair was selected for communication
-
-  // --- Signaling Events (Range: 3000 - 3099) ---
-  EVENT_SIGNALING_BASE = 3000; // Base for signaling related events
-  EVENT_SIGNALING_OFFER_CREATED = 3001; // A signaling offer (e.g., SDP) was created locally
-  EVENT_SIGNALING_OFFER_SENT = 3002; // A signaling offer was sent to the remote peer
-  EVENT_SIGNALING_OFFER_RECEIVED = 3003; // A signaling offer was received from the remote peer
-  EVENT_SIGNALING_ANSWER_CREATED = 3004; // A signaling answer (e.g., SDP) was created locally
-  EVENT_SIGNALING_ANSWER_SENT = 3005; // A signaling answer was sent to the remote peer
-  EVENT_SIGNALING_ANSWER_RECEIVED = 3006; // A signaling answer was received from the remote peer
-  EVENT_SIGNALING_NEGOTIATION_NEEDED = 3007; // A signal indicating that negotiation is required
-  EVENT_SIGNALING_ICE_RESTART_TRIGGERED = 3008; // A request to restart ICE negotiation was initiated
-  EVENT_SIGNALING_CONNECTED = 3009; // Signaling connection established
-  EVENT_SIGNALING_DISCONNECTED = 3010; // Signaling connection lost
-
-  // --- User Interaction Events (Range: 4000 - 4099) ---
-  EVENT_USER_INTERACTION_BASE = 4000; // Base for user interaction events
-  EVENT_USER_JOINED_SESSION = 4001; // A user joined the communication session
-  EVENT_USER_LEFT_SESSION = 4002; // A user left the communication session
-  EVENT_USER_MUTED_AUDIO = 4003; // A user muted their audio
-  EVENT_USER_UNMUTED_AUDIO = 4004; // A user unmuted their audio
-  EVENT_USER_MUTED_VIDEO = 4005; // A user muted their video
-  EVENT_USER_UNMUTED_VIDEO = 4006; // A user unmuted their video
-  EVENT_USER_SCREEN_SHARE_STARTED = 4007; // A user started sharing their screen
-  EVENT_USER_SCREEN_SHARE_STOPPED = 4008; // A user stopped sharing their screen
-  EVENT_USER_INPUT_TEXT_MESSAGE_SENT = 4009; // A user sent a text message
-  EVENT_USER_INPUT_TEXT_MESSAGE_RECEIVED = 4010; // A user received a text message
-
-  // --- Media Handling Events (Range: 5000 - 5099) ---
-  EVENT_MEDIA_HANDLING_BASE = 5000; // Base for media handling events
-  EVENT_MEDIA_LOCAL_AUDIO_TRACK_ADDED = 5001; // A local audio track was added
-  EVENT_MEDIA_LOCAL_VIDEO_TRACK_ADDED = 5002; // A local video track was added
-  EVENT_MEDIA_REMOTE_AUDIO_TRACK_ADDED = 5003; // A remote audio track was added
-  EVENT_MEDIA_REMOTE_VIDEO_TRACK_ADDED = 5004; // A remote video track was added
-  EVENT_MEDIA_LOCAL_AUDIO_TRACK_REMOVED = 5005; // A local audio track was removed
-  EVENT_MEDIA_LOCAL_VIDEO_TRACK_REMOVED = 5006; // A local video track was removed
-  EVENT_MEDIA_REMOTE_AUDIO_TRACK_REMOVED = 5007; // A remote audio track was removed
-  EVENT_MEDIA_REMOTE_VIDEO_TRACK_REMOVED = 5008; // A remote video track was removed
-  EVENT_MEDIA_AUDIO_PLAYBACK_STARTED = 5009; // Audio playback started
-  EVENT_MEDIA_VIDEO_PLAYBACK_STARTED = 5010; // Video playback started
-  EVENT_MEDIA_AUDIO_PLAYBACK_STOPPED = 5011; // Audio playback stopped
-  EVENT_MEDIA_VIDEO_PLAYBACK_STOPPED = 5012; // Video playback stopped
-
-  // --- ICE Connection Type (Range: 6000 - 6099) ---
-  CONNECTION_TYPE_UNKNOWN = 6000;
-  CONNECTION_TYPE_DIRECT = 6001;
-  CONNECTION_TYPE_RELAY = 6002;
-  CONNECTION_TYPE_SRFLX = 6003; // Server Reflexive
-  CONNECTION_TYPE_PRFLX = 6004;  // Peer Reflexive
+message AnalyticsEvent {
+  oneof kind {
+    ErrorEvent error_event = 2;
+    IceCandidateEvent ice_candidate_event = 3;
+    SignalingEvent signaling_event = 4;
+    UserInteractionEvent user_interaction_event = 5;
+    MediaHandlingEvent media_handling_event = 6;
+    IceConnectionType ice_connection_type = 7;
+  }
 }
+
+enum ErrorEvent {
+  ERROR_EVENT_UNSPECIFIED = 0;
+  ERROR_SIGNALING_CONNECTION_FAILED = 1;
+  ERROR_ICE_CONNECTION_FAILED = 2;
+  ERROR_MEDIA_CAPTURE_AUDIO_FAILED = 3;
+  ERROR_MEDIA_CAPTURE_VIDEO_FAILED = 4;
+  ERROR_MEDIA_CAPTURE_SCREEN_FAILED = 5;
+  ERROR_SDP_NEGOTIATION_FAILED = 6;
+  ERROR_OTHER = 99;
+}
+
+enum IceCandidateEvent {
+  ICE_CANDIDATE_EVENT_UNSPECIFIED = 0;
+  ICE_CANDIDATE_GATHERING_STARTED = 1;
+  ICE_CANDIDATE_LOCAL_REFLEXIVE_FOUND = 2;
+  ICE_CANDIDATE_LOCAL_HOST_FOUND = 3;
+  ICE_CANDIDATE_LOCAL_SRFLX_FOUND = 4;
+  ICE_CANDIDATE_LOCAL_PRFLX_FOUND = 5;
+  ICE_CANDIDATE_REMOTE_RECEIVED = 6;
+  ICE_CANDIDATE_REMOTE_REFLEXIVE_FOUND = 7;
+  ICE_CANDIDATE_REMOTE_HOST_FOUND = 8;
+  ICE_CANDIDATE_REMOTE_SRFLX_FOUND = 9;
+  ICE_CANDIDATE_REMOTE_PRFLX_FOUND = 10;
+  ICE_CANDIDATE_PAIRING_SUCCESS = 11;
+  ICE_CANDIDATE_PAIRING_FAILED = 12;
+  ICE_CANDIDATE_CONNECTION_STATE_CHANGED = 13;
+  ICE_CANDIDATE_GATHERING_COMPLETED = 14;
+  ICE_CANDIDATE_SELECTED_PAIR = 15;
+}
+
+enum SignalingEvent {
+  SIGNALING_EVENT_UNSPECIFIED = 0;
+  SIGNALING_OFFER_CREATED = 1;
+  SIGNALING_OFFER_SENT = 2;
+  SIGNALING_OFFER_RECEIVED = 3;
+  SIGNALING_ANSWER_CREATED = 4;
+  SIGNALING_ANSWER_SENT = 5;
+  SIGNALING_ANSWER_RECEIVED = 6;
+  SIGNALING_NEGOTIATION_NEEDED = 7;
+  SIGNALING_ICE_RESTART_TRIGGERED = 8;
+  SIGNALING_CONNECTED = 9;
+  SIGNALING_DISCONNECTED = 10;
+}
+
+enum UserInteractionEvent {
+  USER_INTERACTION_EVENT_UNSPECIFIED = 0;
+  USER_JOINED_SESSION = 1;
+  USER_LEFT_SESSION = 2;
+  USER_MUTED_AUDIO = 3;
+  USER_UNMUTED_AUDIO = 4;
+  USER_MUTED_VIDEO = 5;
+  USER_UNMUTED_VIDEO = 6;
+  USER_SCREEN_SHARE_STARTED = 7;
+  USER_SCREEN_SHARE_STOPPED = 8;
+  USER_INPUT_TEXT_MESSAGE_SENT = 9;
+  USER_INPUT_TEXT_MESSAGE_RECEIVED = 10;
+}
+
+enum MediaHandlingEvent {
+  MEDIA_HANDLING_EVENT_UNSPECIFIED = 0;
+  MEDIA_LOCAL_AUDIO_TRACK_ADDED = 1;
+  MEDIA_LOCAL_VIDEO_TRACK_ADDED = 2;
+  MEDIA_REMOTE_AUDIO_TRACK_ADDED = 3;
+  MEDIA_REMOTE_VIDEO_TRACK_ADDED = 4;
+  MEDIA_LOCAL_AUDIO_TRACK_REMOVED = 5;
+  MEDIA_LOCAL_VIDEO_TRACK_REMOVED = 6;
+  MEDIA_REMOTE_AUDIO_TRACK_REMOVED = 7;
+  MEDIA_REMOTE_VIDEO_TRACK_REMOVED = 8;
+  MEDIA_AUDIO_PLAYBACK_STARTED = 9;
+  MEDIA_VIDEO_PLAYBACK_STARTED = 10;
+  MEDIA_AUDIO_PLAYBACK_STOPPED = 11;
+  MEDIA_VIDEO_PLAYBACK_STOPPED = 12;
+}
+
+enum IceConnectionType {
+  ICE_CONNECTION_TYPE_UNKNOWN = 0;
+
+  // Direct candidates.
+  ICE_CONNECTION_TYPE_DIRECT_UDP = 1;
+  ICE_CONNECTION_TYPE_DIRECT_TCP = 2;
+  ICE_CONNECTION_TYPE_DIRECT_DTLS = 3;
+  ICE_CONNECTION_TYPE_DIRECT_TLS = 4;
+
+  // Relay candidates.
+  ICE_CONNECTION_TYPE_RELAY_UDP = 5;
+  ICE_CONNECTION_TYPE_RELAY_TCP = 6;
+  ICE_CONNECTION_TYPE_RELAY_DTLS = 7;
+  ICE_CONNECTION_TYPE_RELAY_TLS = 8;
+
+  // Server-reflexive (srflx) candidates.
+  ICE_CONNECTION_TYPE_SRFLX_UDP = 9;
+  ICE_CONNECTION_TYPE_SRFLX_TCP = 10;
+  ICE_CONNECTION_TYPE_SRFLX_DTLS = 11;
+  ICE_CONNECTION_TYPE_SRFLX_TLS = 12;
+
+  // Peer-reflexive (prflx) candidates.
+  ICE_CONNECTION_TYPE_PRFLX_UDP = 13;
+  ICE_CONNECTION_TYPE_PRFLX_TCP = 14;
+  ICE_CONNECTION_TYPE_PRFLX_DTLS = 15;
+  ICE_CONNECTION_TYPE_PRFLX_TLS = 16;
+}
+
